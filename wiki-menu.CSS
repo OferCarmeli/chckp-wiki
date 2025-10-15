@@ -1,9 +1,3 @@
-/* =========================================================
-   Vertical Flyout Menu — FIX: prevent nested menu truncation
-   - Scrolling happens on .vwrap (not on .vlist)
-   - .vmenu / .vlist allow overflow so flyout can extend right
-   ========================================================= */
-
 /* ---- Theme / layout knobs ---- */
 :root{
   --bg:#444444; --accent:#E45785; --text:#f2f2f2; --ink:#333333; --panel:#ffffff;
@@ -31,8 +25,6 @@ html,body{
   display:inline-flex; align-items:flex-start; gap:var(--gap);
   box-sizing:border-box;
   padding:var(--pad);
-  height:calc(100vh - 8px);          /* keep within iframe */
-  max-height:100vh;
   border:1px solid var(--accent); border-radius:var(--radius);
   background:linear-gradient(#fdfdfe,#f8f9fb);
   box-shadow:0 8px 20px rgba(0,0,0,.08);
@@ -121,3 +113,4 @@ html,body{
 
 /* Optional mobile nicety */
 @media (hover:none){ .vlink, .submenu .MenuHyperlink{ -webkit-tap-highlight-color:transparent; } }
+
