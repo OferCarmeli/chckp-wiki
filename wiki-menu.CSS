@@ -1,156 +1,123 @@
-/* ---------- Theme ---------- */
-:root{
-  --bg:#444444;        /* row background */
-  --accent:#E45785;    /* brand pink */
-  --text:#f2f2f2;      /* light text */
-  --ink:#333333;       /* body text */
-  --panel:#ffffff;     /* surfaces */
-  --shadow:rgba(0,0,0,.16);
+/* =========================================================
+   Vertical Flyout Menu — FIX: prevent nested menu truncation
+   - Scrolling happens on .vwrap (not on .vlist)
+   - .vmenu / .vlist allow overflow so flyout can extend right
+   ========================================================= */
 
-  /* Layout tunables */
-  --menuCol:240px;     /* left column width */
-  --flyCol:260px;      /* reserved width for flyout */
-  --gap:10px;          /* gap between columns */
-  --pad:10px;          /* frame padding */
-  --radius:12px;       /* frame radius */
-  --row-radius:6px;    /* item radius */
+/* ---- Theme / layout knobs ---- */
+:root{
+  --bg:#444444; --accent:#E45785; --text:#f2f2f2; --ink:#333333; --panel:#ffffff;
+  --shadow:rgba(0,0,0,.16);
+  --menuCol:240px;   /* left column width */
+  --flyCol:260px;    /* reserved width for flyout */
+  --gap:10px;        /* gap between columns */
+  --pad:10px;        /* outer padding */
+  --radius:12px;     /* frame radius */
+  --row-radius:6px;  /* item radius */
 }
 
-/* ---------- Base / Frame awareness ---------- */
+/* ---- Frame awareness (fixed-height iframe) ---- */
 html,body{
   margin:0; padding:0;
-  height:100vh; max-height:100vh;    /* respect fixed iframe height */
-  overflow:hidden;                   /* all scrolling is internal */
+  height:100vh; max-height:100vh;
+  overflow:hidden; /* all scroll inside .vwrap */
   background:transparent; color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
   line-height:1.2;
 }
 
-/* ---------- Framed wrapper (covers menu + flyout area) ---------- */
+/* ---- Framed wrapper (scroll container) ---- */
 .vwrap{
-  display:inline-flex;               /* [menu] [ghost] side-by-side */
-  align-items:flex-start;
-  gap:var(--gap);
+  display:inline-flex; align-items:flex-start; gap:var(--gap);
   box-sizing:border-box;
   padding:var(--pad);
-  height:calc(100vh - 8px);          /* small breathing room */
+  height:calc(100vh - 8px);          /* keep within iframe */
   max-height:100vh;
-  border:1px solid var(--accent);
-  border-radius:var(--radius);
+  border:1px solid var(--accent); border-radius:var(--radius);
   background:linear-gradient(#fdfdfe,#f8f9fb);
   box-shadow:0 8px 20px rgba(0,0,0,.08);
-  overflow:hidden;
+
+  /* KEY CHANGES: let the whole frame scroll; don't clip flyout */
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
 }
 
-/* ---------- Left column ---------- */
-.vmenu{ width:var(--menuCol); min-width:var(--menuCol); }
+/* ---- Left column ---- */
+.vmenu{
+  width:var(--menuCol); min-width:var(--menuCol);
+  /* allow flyout to render beyond the column */
+  overflow:visible;
+}
 
 .homeButton{
   background:var(--bg);
   border-right:1px solid var(--accent);
   border-left:1px solid var(--accent);
   display:inline-flex; align-items:center; gap:6px;
-  padding:4px 10px;
-  color:#fff; text-decoration:none;
-  border-radius:var(--row-radius);
-  font-size:13.5px;
+  padding:4px 10px; color:#fff; text-decoration:none;
+  border-radius:var(--row-radius); font-size:13.5px;
 }
 .homeButton img{ vertical-align:middle; }
 
 .vlist{
-  list-style:none;
-  margin:6px 0 0 0;
-  padding:0;
+  list-style:none; margin:6px 0 0 0; padding:0;
   display:flex; flex-direction:column; gap:4px;
   width:100%;
-  max-height:calc(100vh - 40px);     /* internal scroll */
-  overflow:auto;
-  overscroll-behavior:contain;
-  scrollbar-gutter:stable;
+
+  /* KEY CHANGES: no clipping here */
+  max-height:none;
+  overflow:visible;
 }
 
-/* ---------- Rows ---------- */
+/* ---- Rows ---- */
 .vitem{
-  position:relative;                 /* anchor for the flyout */
-  background:var(--bg);
-  border:1px solid var(--accent);
-  border-radius:var(--row-radius);
+  position:relative; background:var(--bg);
+  border:1px solid var(--accent); border-radius:var(--row-radius);
 }
-
 .vlink{
-  display:block;
-  color:var(--text) !important;
-  text-decoration:none;
-  padding:5px 10px;                  /* compact height */
-  font-size:13.5px;
-  white-space:nowrap;                 /* keeps column width stable */
+  display:block; color:var(--text)!important; text-decoration:none;
+  padding:5px 10px; font-size:13.5px; white-space:nowrap;
 }
-.vlink:hover,
-.vitem:focus-within > .vlink{
-  background:var(--accent);
-  color:#000 !important;
-  outline:none;
-}
-.has-sub > .vlink .chev{ margin-left:6px; opacity:.9; }
+.vlink:hover, .vitem:focus-within>.vlink{ background:var(--accent); color:#000!important; outline:none; }
+.has-sub>.vlink .chev{ margin-left:6px; opacity:.9; }
 
-/* ---------- Right-side flyout (native) ---------- */
+/* ---- Right-side flyout (no truncation) ---- */
 .submenu{
-  display:none;
-  position:absolute;
-  top:0;
-  left:calc(100% + var(--gap));      /* opens into the ghost area */
+  display:none; position:absolute; top:0;
+  left:calc(100% + var(--gap));     /* opens into reserved area */
   width:var(--flyCol); min-width:var(--flyCol);
-  max-height:calc(100vh - 40px);     /* never exceed frame */
-  overflow:auto;
-  background:var(--panel);
-  border:1px solid var(--accent);
-  border-radius:var(--row-radius);
-  box-shadow:0 6px 18px var(--shadow);
-  padding:6px;
-  z-index:9999;
-  font-size:12.5px;                  /* smaller to reduce total height */
-  line-height:1.2;
-}
 
-/* Keep open while hovering label or the panel (no flicker) */
+  /* allow tall menus; frame itself will scroll if needed */
+  max-height:none;
+  background:var(--panel);
+  border:1px solid var(--accent); border-radius:var(--row-radius);
+  box-shadow:0 6px 18px var(--shadow);
+  padding:6px; z-index:9999; font-size:12.5px; line-height:1.2;
+}
 .has-sub:hover .submenu,
 .has-sub:focus-within .submenu,
 .has-sub .submenu:hover{ display:block; }
 
-/* Links in flyout (keeps your palette) */
+/* Links inside flyout */
 .submenu .MenuHyperlink{
-  display:block;
-  padding:5px 8px;
-  margin:3px 0;
-  background:var(--accent);
-  color:var(--text) !important;
-  text-decoration:none;
-  border-radius:var(--row-radius);
-  transition:.15s ease;
-  white-space:nowrap;
+  display:block; padding:5px 8px; margin:3px 0;
+  background:var(--accent); color:var(--text)!important;
+  text-decoration:none; border-radius:var(--row-radius);
+  transition:.15s ease; white-space:nowrap;
 }
-.submenu .MenuHyperlink:hover{
-  background:#ff77a3; color:#000 !important;
-}
+.submenu .MenuHyperlink:hover{ background:#ff77a3; color:#000!important; }
 
-/* Singles (no submenu) */
-.vlink.single{}
-
-/* ---------- Ghost column: reserves width for flyout ---------- */
+/* ---- Ghost column: reserves flyout width so frame covers both ---- */
 .ghost{
-  width:var(--flyCol);
-  min-width:var(--flyCol);
-  height:1px;
-  background:transparent;
+  width:var(--flyCol); min-width:var(--flyCol);
+  height:1px; background:transparent;
 }
 
-/* ---------- Focus (accessibility) ---------- */
+/* ---- Focus (a11y) ---- */
 .vlink:focus, .submenu .MenuHyperlink:focus, .homeButton:focus{
-  outline:2px solid var(--accent);
-  outline-offset:2px;
+  outline:2px solid var(--accent); outline-offset:2px;
 }
 
-/* ---------- Optional mobile tweaks ---------- */
-@media (hover:none){
-  .vlink, .submenu .MenuHyperlink{ -webkit-tap-highlight-color:transparent; }
-}
+/* Optional mobile nicety */
+@media (hover:none){ .vlink, .submenu .MenuHyperlink{ -webkit-tap-highlight-color:transparent; } }
