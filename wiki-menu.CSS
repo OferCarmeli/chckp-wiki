@@ -1,72 +1,50 @@
-/* =========================================================
-   Vertical Flyout Menu — IFRAME-FRIENDLY (fixed height)
-   - Rounded outer frame that looks good in a fixed-height iframe
-   - Column width fits longest label (no wrap)
-   - Right-side flyout submenu (no flicker while hovering)
-   - Compact spacing + smaller fonts
-   - Internal scrolling so nothing overflows the iframe
-   - Optional .flypane (JS-populated) mirrors submenu to keep wrapper tall
-   ========================================================= */
-
 /* ---------- Theme ---------- */
 :root{
-  --bg:#444444;          /* dark row background */
-  --accent:#E45785;      /* brand pink */
-  --text:#f2f2f2;        /* light text */
-  --ink:#333333;         /* body text */
-  --panel:#ffffff;       /* surfaces */
+  --bg:#444444;        /* row background */
+  --accent:#E45785;    /* brand pink */
+  --text:#f2f2f2;      /* light text */
+  --ink:#333333;       /* body text */
+  --panel:#ffffff;     /* surfaces */
   --shadow:rgba(0,0,0,.16);
-  --radius:12px;         /* wrapper radius */
-  --row-radius:6px;      /* item radius */
+
+  /* Layout tunables */
+  --menuCol:240px;     /* left column width */
+  --flyCol:260px;      /* reserved width for flyout */
+  --gap:10px;          /* gap between columns */
+  --pad:10px;          /* frame padding */
+  --radius:12px;       /* frame radius */
+  --row-radius:6px;    /* item radius */
 }
 
 /* ---------- Base / Frame awareness ---------- */
-html, body{
+html,body{
   margin:0; padding:0;
-  height:100vh;              /* confine to the iframe viewport height */
-  max-height:100vh;
-  overflow:hidden;           /* all scrolling will be on inner containers */
-  background:transparent;
-  color:var(--ink);
+  height:100vh; max-height:100vh;    /* respect fixed iframe height */
+  overflow:hidden;                   /* all scrolling is internal */
+  background:transparent; color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
   line-height:1.2;
 }
 
-/* ---------- Rounded outer wrapper ---------- */
+/* ---------- Framed wrapper (covers menu + flyout area) ---------- */
 .vwrap{
-  display:inline-flex;               /* left menu + right flypane */
+  display:inline-flex;               /* [menu] [ghost] side-by-side */
   align-items:flex-start;
-  gap:10px;
+  gap:var(--gap);
   box-sizing:border-box;
-  padding:10px;
-  height:calc(100vh - 8px);          /* a touch of breathing room */
+  padding:var(--pad);
+  height:calc(100vh - 8px);          /* small breathing room */
   max-height:100vh;
   border:1px solid var(--accent);
   border-radius:var(--radius);
   background:linear-gradient(#fdfdfe,#f8f9fb);
   box-shadow:0 8px 20px rgba(0,0,0,.08);
-  overflow:hidden;                   /* contain inner scrollers */
+  overflow:hidden;
 }
 
-/* ---------- Left column (menu) ---------- */
-.vmenu{ display:inline-block; }
+/* ---------- Left column ---------- */
+.vmenu{ width:var(--menuCol); min-width:var(--menuCol); }
 
-/* Column width equals longest label (no wrap) */
-.vlist{
-  list-style:none;
-  margin:6px 0 0 0;
-  padding:0;
-  display:flex;
-  flex-direction:column;
-  gap:4px;                            /* tight row spacing */
-  width:max-content;
-  max-height:calc(100vh - 40px);      /* keep within frame */
-  overflow:auto;                      /* scroll inside if needed */
-  overscroll-behavior:contain;
-  scrollbar-gutter:stable;
-}
-
-/* Home button (keeps your look) */
 .homeButton{
   background:var(--bg);
   border-right:1px solid var(--accent);
@@ -79,23 +57,33 @@ html, body{
 }
 .homeButton img{ vertical-align:middle; }
 
-/* Each row */
+.vlist{
+  list-style:none;
+  margin:6px 0 0 0;
+  padding:0;
+  display:flex; flex-direction:column; gap:4px;
+  width:100%;
+  max-height:calc(100vh - 40px);     /* internal scroll */
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+
+/* ---------- Rows ---------- */
 .vitem{
-  position:relative;                  /* anchor for flyout */
+  position:relative;                 /* anchor for the flyout */
   background:var(--bg);
   border:1px solid var(--accent);
   border-radius:var(--row-radius);
-  overflow:visible;
 }
 
-/* Row link (compact) */
 .vlink{
   display:block;
   color:var(--text) !important;
   text-decoration:none;
-  padding:5px 10px;                   /* compact row height */
+  padding:5px 10px;                  /* compact height */
   font-size:13.5px;
-  white-space:nowrap;                 /* drives column width */
+  white-space:nowrap;                 /* keeps column width stable */
 }
 .vlink:hover,
 .vitem:focus-within > .vlink{
@@ -103,41 +91,36 @@ html, body{
   color:#000 !important;
   outline:none;
 }
-
-/* Chevron marker (for rows with submenu) */
 .has-sub > .vlink .chev{ margin-left:6px; opacity:.9; }
 
-/* ---------- Right-side flyout submenu (native) ---------- */
+/* ---------- Right-side flyout (native) ---------- */
 .submenu{
   display:none;
   position:absolute;
-  top:0;                               /* align to row top */
-  left:100%;                           /* open to the right */
-  margin-left:6px;                     /* tiny gap; prevents hover “dead zone” */
-  min-width:220px;
-  max-height:calc(100vh - 40px);       /* never overflow the iframe */
-  overflow:auto;                       /* scroll inside if tall */
+  top:0;
+  left:calc(100% + var(--gap));      /* opens into the ghost area */
+  width:var(--flyCol); min-width:var(--flyCol);
+  max-height:calc(100vh - 40px);     /* never exceed frame */
+  overflow:auto;
   background:var(--panel);
   border:1px solid var(--accent);
   border-radius:var(--row-radius);
   box-shadow:0 6px 18px var(--shadow);
   padding:6px;
   z-index:9999;
-  font-size:12.5px;                    /* smaller font to lower total height */
+  font-size:12.5px;                  /* smaller to reduce total height */
   line-height:1.2;
 }
 
-/* Keep open while hovering parent OR the submenu itself */
+/* Keep open while hovering label or the panel (no flicker) */
 .has-sub:hover .submenu,
 .has-sub:focus-within .submenu,
-.has-sub .submenu:hover{
-  display:block;
-}
+.has-sub .submenu:hover{ display:block; }
 
-/* Links inside flyout (keeps your MenuHyperlink style) */
+/* Links in flyout (keeps your palette) */
 .submenu .MenuHyperlink{
   display:block;
-  padding:5px 8px;                     /* compact link height */
+  padding:5px 8px;
   margin:3px 0;
   background:var(--accent);
   color:var(--text) !important;
@@ -147,50 +130,27 @@ html, body{
   white-space:nowrap;
 }
 .submenu .MenuHyperlink:hover{
-  background:#ff77a3;
-  color:#000 !important;
+  background:#ff77a3; color:#000 !important;
 }
 
-/* Singles (no submenu) use the same compact row link */
+/* Singles (no submenu) */
 .vlink.single{}
 
-/* ---------- In-frame flyout mirror (optional, JS-populated) ----------
-   If you use the provided JS to copy submenu content into .flypane,
-   it ensures the wrapper visually “balances” and remains tall. */
-.flypane{
-  display:none;
-  min-width:220px;
-  max-height:calc(100vh - 40px);
-  overflow:auto;
-  background:#fff;
-  border:1px solid var(--accent);
-  border-radius:var(--row-radius);
-  box-shadow:0 6px 18px var(--shadow) inset;
-  padding:6px;
-  align-self:stretch;                   /* stretch to match left column */
-  scrollbar-gutter:stable;
+/* ---------- Ghost column: reserves width for flyout ---------- */
+.ghost{
+  width:var(--flyCol);
+  min-width:var(--flyCol);
+  height:1px;
+  background:transparent;
 }
-.flypane.open{ display:block; }
-.flypane a{
-  display:block;
-  padding:5px 8px; margin:3px 0;
-  background:var(--accent); color:var(--text);
-  text-decoration:none; border-radius:var(--row-radius);
-}
-.flypane a:hover{ background:#ff77a3; color:#000; }
 
-/* ---------- Focus states (accessibility) ---------- */
-.vlink:focus,
-.submenu .MenuHyperlink:focus,
-.flypane a:focus,
-.homeButton:focus{
+/* ---------- Focus (accessibility) ---------- */
+.vlink:focus, .submenu .MenuHyperlink:focus, .homeButton:focus{
   outline:2px solid var(--accent);
   outline-offset:2px;
 }
 
-/* ---------- Optional: reduce mobile tap highlight ---------- */
+/* ---------- Optional mobile tweaks ---------- */
 @media (hover:none){
-  .vlink, .submenu .MenuHyperlink, .flypane a{
-    -webkit-tap-highlight-color: transparent;
-  }
+  .vlink, .submenu .MenuHyperlink{ -webkit-tap-highlight-color:transparent; }
 }
