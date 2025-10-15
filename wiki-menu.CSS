@@ -9,113 +9,119 @@
 }
 
 html,body{
-  margin:0; padding:0; overflow:visible;
+  margin:0;
+  padding:0;
+  height:auto;                 /* tighter body in iframe */
+  overflow:visible;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
-  background:transparent; color:var(--ink);
+  background:transparent;
+  color:var(--ink);
 }
 
 /* ===== Container ===== */
-/* Width fits the longest label (no wrap) + small side margins */
 .vmenu{
   display:inline-block;
-  margin: 0 8px;                 /* small side margins */
-  position: relative;
-  z-index: 1;
+  margin:0 6px;                /* small side margins */
+  position:relative;
+  z-index:1;
 }
 .vlist{
-  list-style:none; margin:8px 0 0 0; padding:0;
-  display:flex; flex-direction:column; gap:8px;
-  width:max-content;              /* column width equals longest text */
+  list-style:none;
+  margin:6px 0 0 0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;                     /* tighter gap between rows */
+  width:max-content;           /* column fits longest label */
 }
 
-/* ===== Home Button ===== */
+/* ===== Home ===== */
 .homeButton{
   background:var(--bg);
   border-right:1px solid var(--accent);
   border-left:1px solid var(--accent);
-  display:inline-flex; align-items:center; gap:8px;
-  padding:6px 10px;               /* compact */
-  height:auto;
-  color:#fff; text-decoration:none; border-radius:6px;
-  line-height:1.2; font-size:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;            /* compact */
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  line-height:1.2;
+  font-size:13.5px;
 }
-.homeButton img{ vertical-align:middle; }
 
 /* ===== Items ===== */
 .vitem{
-  position:relative;              /* anchor for right-side submenu */
+  position:relative;           /* anchor for flyout */
   background:var(--bg);
   border:1px solid var(--accent);
-  border-radius:8px;
+  border-radius:6px;           /* smaller radius */
   overflow:visible;
 }
-
-/* Links (rows) – compact height */
 .vlink{
   display:block;
-  color:var(--text) !important;
+  color:var(--text)!important;
   text-decoration:none;
-  padding:6px 12px;               /* compact row height */
+  padding:5px 10px;            /* compact row height */
   line-height:1.2;
-  font-size:14px;
-  white-space:nowrap;             /* keep one line; drives column width */
+  font-size:13.5px;            /* slightly smaller */
+  white-space:nowrap;
 }
 .vlink:hover,
-.vitem:focus-within > .vlink{
+.vitem:focus-within>.vlink{
   background:var(--accent);
-  color:#000 !important;
+  color:#000!important;
   outline:none;
 }
-
-/* Chevron marker for items with submenu */
-.has-sub > .vlink .chev{
-  margin-left:8px; opacity:.9;
-}
+.has-sub>.vlink .chev{ margin-left:6px; opacity:.9; }
 
 /* ===== Right-side submenu (flyout) ===== */
 .submenu{
   display:none;
   position:absolute;
-  top:0;                          /* align to row top */
-  left:100%;                      /* open to the right */
-  margin-left:8px;                /* small gap between column and panel */
-  min-width:260px;
+  top:0;                        /* align to top of row */
+  left:100%;
+  margin-left:6px;              /* tiny gap; no dead zone */
+  min-width:220px;              /* narrower panel */
   background:var(--panel);
   border:1px solid var(--accent);
-  border-radius:8px;
-  box-shadow:0 8px 22px var(--shadow);
-  padding:8px;                    /* compact inner spacing */
-  z-index: 9999;
+  border-radius:6px;
+  box-shadow:0 6px 18px var(--shadow);
+  padding:6px;                  /* tighter inner padding */
+  z-index:9999;
+  font-size:13px;               /* smaller font in expanded menu */
+  line-height:1.2;
 }
 
-/* Open submenu on hover and keyboard focus */
+/* Keep open while hovering parent OR the submenu itself */
 .has-sub:hover .submenu,
-.has-sub:focus-within .submenu{
+.has-sub:focus-within .submenu,
+.has-sub .submenu:hover{
   display:block;
 }
 
-/* Links inside submenu (keeps your .MenuHyperlink look) */
+/* Links inside submenu */
 .submenu .MenuHyperlink{
   display:block;
-  padding:8px 10px;
+  padding:6px 9px;              /* compact link height */
+  margin:3px 0;                 /* minimal spacing */
   background:var(--accent);
-  color:var(--text) !important;
+  color:var(--text)!important;
   text-decoration:none;
   border-radius:6px;
-  margin:4px 0;
   transition:.15s ease;
   white-space:nowrap;
 }
 .submenu .MenuHyperlink:hover{
-  background:#ff77a3; color:#000 !important;
+  background:#ff77a3;
+  color:#000!important;
 }
 
-/* ===== Singles (no submenu) ===== */
-.vlink.single{
-  /* inherits compact row styles */
-}
+/* Singles (no submenu) inherit compact row */
+.vlink.single{}
 
-/* Accessibility focus */
+/* Focus states */
 .vlink:focus,
 .submenu .MenuHyperlink:focus,
 .homeButton:focus{
