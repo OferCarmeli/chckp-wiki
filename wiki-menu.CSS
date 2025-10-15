@@ -1,119 +1,182 @@
 <style>
-/* ===== Base / Reset ===== */
+/* =======================
+   Base / Theme
+   ======================= */
 :root {
-  --menu-bg: #444444;
+  --bg:      #444444;
   --accent:  #E45785;
   --text:    #f2f2f2;
+  --ink:     #333333;
+  --panel:   #ffffff;
+  --panel2:  #f7f7f9;
+  --border:  #e5e5e9;
+  --shadow:  rgba(0,0,0,0.18);
 }
+
 html, body {
   margin: 0;
   padding: 0;
   overflow: visible;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background: transparent;
+  color: var(--ink);
 }
 
-/* ===== Optional wrapper if you have a top bar ===== */
-.menu-bar {
-  position: relative;      /* keeps absolute children anchored */
-  z-index: 10;
-  overflow: visible;
-  background: var(--menu-bg);
+/* =======================
+   Vertical Menu Container
+   ======================= */
+.vmenu {
+  width: 100%;
+  max-width: 480px;         /* adjust if you want narrower/wider column */
+  margin: 0 auto;           /* center in the iframe/page */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* ===== Home Button ===== */
+/* =======================
+   Home Button (kept from your design)
+   ======================= */
 .homeButton {
-  background-color: var(--menu-bg);
+  background-color: var(--bg);
   border-right: 1px solid var(--accent);
   border-left:  1px solid var(--accent);
-  display: inline-block;
-  vertical-align: top;
-  text-align: center;
-  padding: 6px;
-  width: 24px;
-  height: 27px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  width: 100%;
+  height: 40px;             /* taller for vertical layout */
+  box-sizing: border-box;
   cursor: pointer;
-  color: white;
-}
-
-/* ===== Dropdown Container ===== */
-.dropdown {
-  position: relative;      /* anchor for the panel */
-  display: inline-block;
-  overflow: visible;
-  z-index: 20;             /* above surrounding content inside iframe */
-}
-
-/* ===== Dropdown Button ===== */
-.dropbtn {
-  background-color: var(--menu-bg);
-  color: var(--text) !important;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-  padding: 10px 10px;
+  color: #ffffff;
   text-decoration: none;
-  transition: 0.2s;
-  list-style: none !important;
-  font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  border-radius: 6px;
 }
-.dropbtn:hover,
-.dropbtn:focus {
-  background-color: var(--accent);
+.homeButton img {
+  display: inline-block;
+  vertical-align: middle;
+}
+.homeButton span {
+  line-height: 1;
+  font-size: 14px;
+}
+
+/* =======================
+   Section (details/summary)
+   ======================= */
+.vitem {
+  background: var(--bg);
+  border-radius: 8px;
+  overflow: clip;           /* keeps corners when panel opens */
+  border: 1px solid var(--accent);
+}
+
+/* Summary row */
+.vsummary {
+  list-style: none;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Clickable label inside summary */
+.vsummary .vlink {
+  display: block;
+  color: var(--text) !important;
+  text-decoration: none;
+  padding: 12px 16px;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+.vsummary:hover .vlink,
+.vsummary:focus-within .vlink {
+  background: var(--accent);
   color: #000 !important;
   outline: none;
 }
 
-/* ===== Dropdown Panel (opens over content) ===== */
-.dropdown-content {
-  display: none;                   /* hidden by default */
+/* Default disclosure arrow is browser UI; we add our own marker */
+.vsummary::after {
+  content: "▸";
   position: absolute;
-  top: 100%;                       /* below button */
-  left: 0;
-  min-width: 220px;
-  margin: 0;
-  padding: 0;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
-  z-index: 9999;                   /* on top within iframe */
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text);
+  pointer-events: none;
   font-size: 14px;
 }
 
-/* Open on hover and keyboard focus (iframe/touch friendly) */
-.dropdown:hover .dropdown-content,
-.dropdown:focus-within .dropdown-content,
-.dropbtn:focus + .dropdown-content {
-  display: block;
+/* When open, rotate marker */
+.vitem[open] .vsummary::after {
+  content: "▾";
 }
 
-/* ===== Dropdown Links ===== */
-.dropdown-content a {
-  display: block;
-  padding: 8px 12px;
-  text-decoration: none;
-  white-space: nowrap;
-  background-color: var(--accent);
-  color: var(--text);
-  transition: 0.15s;
+/* Panel content */
+.vpanel {
+  background: var(--panel);
+  padding: 10px;
+  border-top: 1px solid var(--accent);
+  box-shadow: 0 8px 22px var(--shadow) inset;
+  display: grid;
+  gap: 8px;
 }
-.dropdown-content a:hover {
-  background-color: #ff77a3;
+
+/* Links inside panel (keeps your .MenuHyperlink class) */
+.vpanel .MenuHyperlink,
+.MenuHyperlink {
+  display: block;
+  padding: 10px 12px;
+  background: var(--accent);
+  color: var(--text) !important;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.15s ease;
+  white-space: nowrap;
+}
+.vpanel .MenuHyperlink:hover,
+.MenuHyperlink:hover {
+  background: #ff77a3;
   color: #000 !important;
 }
 
-/* ===== Menu Hyperlinks (legacy selector kept) ===== */
-.MenuHyperlink {
-  color: white !important;
+/* =======================
+   Single items (no submenu)
+   ======================= */
+.vitem.single,
+a.vitem.single {
+  display: block;
+  background: var(--bg);
+  color: var(--text) !important;
   text-decoration: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  transition: 0.2s ease;
+}
+.vitem.single:hover,
+a.vitem.single:hover {
+  background: var(--accent);
+  color: #000 !important;
 }
 
-/* ===== Links/Images Reset ===== */
-a, img {
-  margin: 0;
-  padding: 0;
-  display: inline-block;
-  vertical-align: middle;
+/* Accessibility & focus */
+.vsummary:focus,
+.vsummary .vlink:focus,
+a.vitem.single:focus,
+.homeButton:focus,
+.MenuHyperlink:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
+
+/* Optional: reduce default marker from <details> on some browsers */
+.vitem > summary { list-style: none; }
+.vitem > summary::-webkit-details-marker { display: none; }
 </style>
+
 
