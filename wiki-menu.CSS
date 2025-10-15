@@ -1,7 +1,10 @@
 <style>
-/* ======================================
-   Global / Font / Reset
-   ====================================== */
+/* ===== Base / Reset ===== */
+:root {
+  --menu-bg: #444444;
+  --accent:  #E45785;
+  --text:    #f2f2f2;
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -9,13 +12,19 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
-/* ======================================
-   Home Button
-   ====================================== */
+/* ===== Optional wrapper if you have a top bar ===== */
+.menu-bar {
+  position: relative;      /* keeps absolute children anchored */
+  z-index: 10;
+  overflow: visible;
+  background: var(--menu-bg);
+}
+
+/* ===== Home Button ===== */
 .homeButton {
-  background-color: #444444;
-  border-right: 1px solid #E45785;
-  border-left: 1px solid #E45785;
+  background-color: var(--menu-bg);
+  border-right: 1px solid var(--accent);
+  border-left:  1px solid var(--accent);
   display: inline-block;
   vertical-align: top;
   text-align: center;
@@ -26,106 +35,85 @@ html, body {
   color: white;
 }
 
-/* ======================================
-   Dropdown Container
-   ====================================== */
+/* ===== Dropdown Container ===== */
 .dropdown {
-  position: relative;
+  position: relative;      /* anchor for the panel */
   display: inline-block;
-  overflow: visible; /* allows internal overlay */
+  overflow: visible;
+  z-index: 20;             /* above surrounding content inside iframe */
 }
 
-/* ======================================
-   Dropdown Button
-   ====================================== */
+/* ===== Dropdown Button ===== */
 .dropbtn {
-  background-color: #444444;
-  color: #f2f2f2 !important;
+  background-color: var(--menu-bg);
+  color: var(--text) !important;
   border: none;
   cursor: pointer;
   text-align: center;
   padding: 10px 10px;
   text-decoration: none;
-  transition: 0.3s;
+  transition: 0.2s;
   list-style: none !important;
   font-size: 14px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
-
-/* Hover effect on button */
-.dropbtn:hover {
-  background-color: #E45785;
-  color: #000;
+.dropbtn:hover,
+.dropbtn:focus {
+  background-color: var(--accent);
+  color: #000 !important;
+  outline: none;
 }
 
-/* ======================================
-   Dropdown Content (Overlay Style)
-   ====================================== */
+/* ===== Dropdown Panel (opens over content) ===== */
 .dropdown-content {
-  display: none;
+  display: none;                   /* hidden by default */
   position: absolute;
-  top: 100%; /* below the button */
+  top: 100%;                       /* below button */
   left: 0;
-  background-color: #f9f9f9;
   min-width: 220px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.2);
-  z-index: 9999;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  font-size: 14px;
   margin: 0;
   padding: 0;
-  border-radius: 4px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  z-index: 9999;                   /* on top within iframe */
+  font-size: 14px;
 }
 
-/* Dropdown Links */
+/* Open on hover and keyboard focus (iframe/touch friendly) */
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content,
+.dropbtn:focus + .dropdown-content {
+  display: block;
+}
+
+/* ===== Dropdown Links ===== */
 .dropdown-content a {
-  color: #f2f2f2;
-  background-color: #E45785;
+  display: block;
   padding: 8px 12px;
   text-decoration: none;
-  display: block;
   white-space: nowrap;
-  transition: 0.2s;
+  background-color: var(--accent);
+  color: var(--text);
+  transition: 0.15s;
 }
-
-/* Hover on dropdown links */
 .dropdown-content a:hover {
-  color: #000 !important;
   background-color: #ff77a3;
+  color: #000 !important;
 }
 
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* ======================================
-   Menu Hyperlinks
-   ====================================== */
+/* ===== Menu Hyperlinks (legacy selector kept) ===== */
 .MenuHyperlink {
   color: white !important;
   text-decoration: none;
 }
 
-/* ======================================
-   Links & Images Reset
-   ====================================== */
+/* ===== Links/Images Reset ===== */
 a, img {
   margin: 0;
   padding: 0;
   display: inline-block;
   vertical-align: middle;
 }
-
-/* ======================================
-   Optional Overlay Style (iframe-safe)
-   ====================================== */
-.dropdown-content.overlay {
-  position: absolute;
-  top: auto;
-  bottom: 100%;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-}
 </style>
+
