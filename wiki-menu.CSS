@@ -1,84 +1,131 @@
 <style>
-    /* NOT Working
-      <link rel="stylesheet" type="text/css"
-      href="https://checkpointwiki.atlassian.net/wiki/download/attachments/17095870/Wiki_Cloud_Menus_Stylesheet.CSS">*/
-    /* Home Button */
-    .homeButton {
-      background-color: #444444;
-      border-right: 1px solid #E45785;
-      border-left: 1px solid #E45785;
-      display: inline-block;
-      vertical-align: top;
-      text-align: center;
-      padding: 6px;
-      width: 24px;
-      height: 27px;
-      cursor: pointer;
-    }
-    
-    /* Dropdown container */
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-    
-    /* Dropdown button */
-    .dropbtn {
-      background-color: #444444;
-      color: #f2f2f2 !important;
-      border: none;
-      cursor: pointer;
-      text-align: center;
-      padding: 10px;
-      text-decoration: none;
-      transition: 0.3s;
-      list-style: none !important;
-      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-      font-size: 14px;
-    }
-    
-    /* Dropdown content */
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2) !important;
-      z-index: 99;
-      font-family: inherit;
-      font-size: 14px;
-      margin: 0;
-      padding: 0;
-    }
-    
-    /* Dropdown links */
-    .dropdown-content a {
-      color: #999999;
-      padding: 6px;
-      text-decoration: none;
-      display: block;
-      white-space: nowrap;
-      background-color: #E45785;
-      margin: 0;
-    }
-    
-    .dropdown-content a:hover {
-      color: black !important;
-    }
-    
-    .MenuHyperlink {
-      color: white !important;
-    }
-    
-    /* Show dropdown on hover */
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-    
-    /* Reset margins/padding */
-    a, img {
-      margin: 0;
-      padding: 0;
-      display: inline-block;
-    }
-</style>
+/* ======================================
+   Global / Font / Reset
+   ====================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
 
+/* ======================================
+   Home Button
+   ====================================== */
+.homeButton {
+  background-color: #444444;
+  border-right: 1px solid #E45785;
+  border-left: 1px solid #E45785;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  padding: 6px;
+  width: 24px;
+  height: 27px;
+  cursor: pointer;
+  color: white;
+}
+
+/* ======================================
+   Dropdown Container
+   ====================================== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  overflow: visible; /* allows internal overlay */
+}
+
+/* ======================================
+   Dropdown Button
+   ====================================== */
+.dropbtn {
+  background-color: #444444;
+  color: #f2f2f2 !important;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px 10px;
+  text-decoration: none;
+  transition: 0.3s;
+  list-style: none !important;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+/* Hover effect on button */
+.dropbtn:hover {
+  background-color: #E45785;
+  color: #000;
+}
+
+/* ======================================
+   Dropdown Content (Overlay Style)
+   ====================================== */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%; /* below the button */
+  left: 0;
+  background-color: #f9f9f9;
+  min-width: 220px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.2);
+  z-index: 9999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  border-radius: 4px;
+}
+
+/* Dropdown Links */
+.dropdown-content a {
+  color: #f2f2f2;
+  background-color: #E45785;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+/* Hover on dropdown links */
+.dropdown-content a:hover {
+  color: #000 !important;
+  background-color: #ff77a3;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* ======================================
+   Menu Hyperlinks
+   ====================================== */
+.MenuHyperlink {
+  color: white !important;
+  text-decoration: none;
+}
+
+/* ======================================
+   Links & Images Reset
+   ====================================== */
+a, img {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ======================================
+   Optional Overlay Style (iframe-safe)
+   ====================================== */
+.dropdown-content.overlay {
+  position: absolute;
+  top: auto;
+  bottom: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+</style>
